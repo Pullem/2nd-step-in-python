@@ -1,11 +1,20 @@
-import sys, os, configparser, queue, datetime, glob, ctypes, psutil, subprocess, zlib
-import qdarkstyle
+import configparser
+import ctypes
+import datetime
+import glob
+import os
+import psutil
+import queue
+import subprocess
+import sys
+import zlib
 
-from PyQt5.QtWidgets import (QWidget, QApplication, QDesktopWidget, QGroupBox, 
-	QGridLayout, QLabel, QLineEdit, QPushButton, QComboBox, QFileDialog,
-	QMessageBox)
-from PyQt5.QtGui import QIcon
+import qdarkstyle
 from PyQt5.QtCore import Qt, QSize, pyqtSignal, QProcess, QCoreApplication
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (QWidget, QApplication, QDesktopWidget, QGroupBox,
+							 QGridLayout, QLabel, QLineEdit, QPushButton, QComboBox, QFileDialog,
+							 QMessageBox)
 
 os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
 
@@ -16,24 +25,25 @@ from fileManagement import FileManagement
 from Settings import SettingsDialog
 from Options import OptionsDialog
 
+
 class HoverButton(QPushButton):
-    mouseHover = pyqtSignal(bool)
+	mouseHover = pyqtSignal(bool)
 
-    def __init__(self, parent=None):
-        QPushButton.__init__(self, parent)
-        self.setMouseTracking(True)
+	def __init__(self, parent=None):
+		QPushButton.__init__(self, parent)
+		self.setMouseTracking(True)
 
-    def enterEvent(self, event):
-        self.mouseHover.emit(True)
-        self.setStyleSheet(
-        	'padding: 0px;background-color: rgba(255, 255, 255, 20);')
+	def enterEvent(self, event):
+		self.mouseHover.emit(True)
+		self.setStyleSheet(
+			'padding: 0px;background-color: rgba(255, 255, 255, 20);')
 
-    def leaveEvent(self, event):
-        self.mouseHover.emit(False)
-        self.setStyleSheet('padding: 0px;background-color: none;')
+	def leaveEvent(self, event):
+		self.mouseHover.emit(False)
+		self.setStyleSheet('padding: 0px;background-color: none;')
+
 
 class MainWindow(QWidget, FileManagement):
-
 	def __init__(self):
 		super().__init__()
 
@@ -132,11 +142,11 @@ class MainWindow(QWidget, FileManagement):
 
 	def openOutputDirectory(self):
 		if self.outputLineEdit.text() == '':
-			self.outputLineEdit.setText(QFileDialog.getExistingDirectory(self, 
-			'Select Output Directory', '/home'))
+			self.outputLineEdit.setText(QFileDialog.getExistingDirectory(self,
+																		 'Select Output Directory', '/home'))
 		else:
-			outputDir = (QFileDialog.getExistingDirectory(self, 
-				'Select Output Directory', self.outputLineEdit.text()))
+			outputDir = (QFileDialog.getExistingDirectory(self,
+														  'Select Output Directory', self.outputLineEdit.text()))
 			if not outputDir == '':
 				self.outputLineEdit.setText(outputDir)
 
@@ -154,8 +164,8 @@ class MainWindow(QWidget, FileManagement):
 	def openSettings(self):
 		mainWindow = self
 
-		settings = SettingsDialog(mainWindow, 
-			self.profileComboBox.currentIndex())
+		settings = SettingsDialog(mainWindow,
+								  self.profileComboBox.currentIndex())
 
 		self.fileList.setAcceptDrops(False)
 
@@ -178,18 +188,19 @@ class MainWindow(QWidget, FileManagement):
 		config = configparser.ConfigParser()
 		config.read(os.path.normpath('./data/options.ini'))
 
-		if config.getboolean('Main','RememberProfile'):
+		if config.getboolean('Main', 'RememberProfile'):
 			self.profileComboBox.setCurrentIndex(
 				self.profileComboBox.findText(str(
-					config.get('Main','PreviousProfile'))))
+					config.get('Main', 'PreviousProfile'))))
 
-		if config.getboolean('Main','RememberOutput'):
+		if config.getboolean('Main', 'RememberOutput'):
 			self.outputLineEdit.setText(str(
-				config.get('Main','PreviousOutput')))
+				config.get('Main', 'PreviousOutput')))
 
 	"""
 	Encoding process functions
 	"""
+
 	def readyToEncode(self):
 		self.halt = False
 		missingFieldDialog = QMessageBox(self)
@@ -231,7 +242,6 @@ class MainWindow(QWidget, FileManagement):
 		self.fileList.setDragEnabled(False)
 		self.fileList.clicked.disconnect()
 
-
 		self.addFileButton.setEnabled(False)
 		self.removeFileButton.setEnabled(False)
 		self.removeAllButton.setEnabled(False)
@@ -251,37 +261,36 @@ class MainWindow(QWidget, FileManagement):
 		config = configparser.ConfigParser()
 		config.read(os.path.normpath('./data/options.ini'))
 
-		if config.getboolean('Main','Shutdown'):
+		if config.getboolean('Main', 'Shutdown'):
 			self.mediaInfoText.setPlainText(
-			'Shutdown on Completion is Enabled.  To Disable, Go to Options')
+				'Shutdown on Completion is Enabled.  To Disable, Go to Options')
 		else:
 			self.mediaInfoText.clear()
 		self.updateOptions()
 
 		self.startEncode()
 
-
 	def startEncode(self):
 		files = glob.glob(os.path.normpath('./temp/*'))
 		for f in files:
 			os.remove(f)
-		
+
 		profileName = self.profileComboBox.currentText()
 
 		self.encodeConfig = configparser.ConfigParser()
 		self.encodeConfig.read(os.path.normpath(
 			'./profiles/' + profileName + '.ini'))
 
-		cmdOutput = self.encodeConfig.get('Misc','CommandLineOutput')
+		cmdOutput = self.encodeConfig.get('Misc', 'CommandLineOutput')
 		cmdOutput += ' ' + self.encodeConfig.get('Misc', 'CustomCmdLine')
 		self.curInputFile = 1
 		self.totalInputFiles = 0
 
 		for index in range(self.fileList.count()):
-			completeCmdOutput = (os.path.normpath('./tools/' + cmdOutput) + 
-				' --quiet --output ' + 
-				'"' + os.path.normpath('./temp/Output.mkv') + '" ' + '"' +
-				os.path.normpath(self.fileList.item(index).data(1001) + '"'))
+			completeCmdOutput = (os.path.normpath('./tools/' + cmdOutput) +
+								 ' --quiet --output ' +
+								 '"' + os.path.normpath('./temp/Output.mkv') + '" ' + '"' +
+								 os.path.normpath(self.fileList.item(index).data(1001) + '"'))
 
 			self.processQueue.put(completeCmdOutput)
 			print(completeCmdOutput)
@@ -290,11 +299,11 @@ class MainWindow(QWidget, FileManagement):
 			self.totalInputFiles += 1
 
 		now = datetime.datetime.now()
-		self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-			str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-			']  Encoding file ' + str(self.curInputFile) + '/' + 
-			str(self.totalInputFiles) + '  -  ' + 
-			self.fileList.item(self.curInputFile - 1).text() + '...')
+		self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+								  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+								  ']  Encoding file ' + str(self.curInputFile) + '/' +
+								  str(self.totalInputFiles) + '  -  ' +
+								  self.fileList.item(self.curInputFile - 1).text() + '...')
 
 		self.process.finished.connect(self.finishedCurrentVideoEncode)
 		self.process.readyReadStandardError.connect(self.progressUpdate)
@@ -305,7 +314,7 @@ class MainWindow(QWidget, FileManagement):
 	def progressUpdate(self):
 		# print(self.process.readAllStandardError())
 		curProgress = (bytes(self.process.readAllStandardError()).
-			decode().strip().split('\r'))
+					   decode().strip().split('\r'))
 
 		# print(curProgress[len(curProgress) - 1])
 		self.encodeProgressLabel.setText(curProgress[len(curProgress) - 1])
@@ -316,18 +325,18 @@ class MainWindow(QWidget, FileManagement):
 
 		now = datetime.datetime.now()
 		if self.process.exitCode() == -1:
-			self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-			str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-			']  Invalid Custom Command Line Input')
+			self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+									  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+									  ']  Invalid Custom Command Line Input')
 
-			self.mediaInfoText.append('\n[' + str(now.date()) + ' ' + 
-				str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-				']  Stopping Encode')
+			self.mediaInfoText.append('\n[' + str(now.date()) + ' ' +
+									  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+									  ']  Stopping Encode')
 			self.finishEncode()
 		else:
-			self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-				str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
-				']  Video Encode Complete')
+			self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+									  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+									  ']  Video Encode Complete')
 			self.encodeAudioStreams()
 
 	def encodeAudioStreams(self):
@@ -335,10 +344,10 @@ class MainWindow(QWidget, FileManagement):
 			return -1
 
 		now = datetime.datetime.now()
-		if self.encodeConfig.getboolean('Misc','audiosource'):
-			self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-				str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
-				']  Using Source Audio')
+		if self.encodeConfig.getboolean('Misc', 'audiosource'):
+			self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+									  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+									  ']  Using Source Audio')
 			self.startMergeProcess()
 			return None
 
@@ -355,22 +364,22 @@ class MainWindow(QWidget, FileManagement):
 		self.totalAudioTracks = 0
 
 		mkvMergeCmd = ''
-		if self.encodeConfig.get('System','architecture') == 32:
+		if self.encodeConfig.get('System', 'architecture') == 32:
 			mkvMergeCmd += os.path.normpath('./tools/' + 'mkvmerge32.exe ')
 		else:
 			mkvMergeCmd += os.path.normpath('./tools/' + 'mkvmerge64.exe ')
 
-		print(mkvMergeCmd + ' --identify "' + 
-			self.fileList.item(self.curInputFile - 1).data(1001) + '"')
-		self.audioStreamProcess.start(mkvMergeCmd + ' --identify "' + 
-			self.fileList.item(self.curInputFile - 1).data(1001) + '"')
+		print(mkvMergeCmd + ' --identify "' +
+			  self.fileList.item(self.curInputFile - 1).data(1001) + '"')
+		self.audioStreamProcess.start(mkvMergeCmd + ' --identify "' +
+									  self.fileList.item(self.curInputFile - 1).data(1001) + '"')
 		self.currentProcess = psutil.Process(
 			self.audioStreamProcess.processId())
 
 	def processTracks(self):
 		print('processing tracks')
 		output = (bytes(self.audioStreamProcess.readAllStandardOutput()).
-			decode().strip().split('\r\n'))
+				  decode().strip().split('\r\n'))
 		print(output)
 
 		for line in output:
@@ -381,21 +390,21 @@ class MainWindow(QWidget, FileManagement):
 				if line[3] == 'audio':
 					self.totalAudioTracks += 1
 
-					ffmpegCmd = (os.path.normpath('./tools/ffmpeg.exe') + 
-						' -i "' + os.path.normpath(self.fileList.item(
-							self.curInputFile - 1).data(1001)) +
-						'" -map 0:' + line[2][:-1] + ' -f wav "' + 
-						os.path.normpath('./temp/OutputAudio' + 
-							str(self.totalAudioTracks) + '.wav') + '"')
+					ffmpegCmd = (os.path.normpath('./tools/ffmpeg.exe') +
+								 ' -i "' + os.path.normpath(self.fileList.item(
+						self.curInputFile - 1).data(1001)) +
+								 '" -map 0:' + line[2][:-1] + ' -f wav "' +
+								 os.path.normpath('./temp/OutputAudio' +
+												  str(self.totalAudioTracks) + '.wav') + '"')
 
 					neroAacCmd = (
-						os.path.normpath('./tools/' + 'neroAacEnc.exe') + 
-						' -ignorelength -q ' + 
-						self.encodeConfig.get('Misc','audioquality') + 
-						' -if "' + os.path.normpath('./temp/OutputAudio' + 
-							str(self.totalAudioTracks) + '.wav') + '" -of "' + 
-						os.path.normpath('./temp/OutputAudio' + 
-							str(self.totalAudioTracks) + '.aac') + '"')
+						os.path.normpath('./tools/' + 'neroAacEnc.exe') +
+						' -ignorelength -q ' +
+						self.encodeConfig.get('Misc', 'audioquality') +
+						' -if "' + os.path.normpath('./temp/OutputAudio' +
+													str(self.totalAudioTracks) + '.wav') + '" -of "' +
+						os.path.normpath('./temp/OutputAudio' +
+										 str(self.totalAudioTracks) + '.aac') + '"')
 
 					print(ffmpegCmd)
 					print(neroAacCmd)
@@ -413,13 +422,13 @@ class MainWindow(QWidget, FileManagement):
 
 		print('Start ffmpeg + nero encode')
 		self.encodeProgressLabel.setText('Encoding audio stream ' +
-		str(self.numAudioTracks) + '/' + str(self.totalAudioTracks) + '...')
+										 str(self.numAudioTracks) + '/' + str(self.totalAudioTracks) + '...')
 
 		now = datetime.datetime.now()
-		self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-			str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-			']  Encoding Audio Stream ' + str(self.numAudioTracks) + '/' + 
-			str(self.totalAudioTracks) + '...')
+		self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+								  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+								  ']  Encoding Audio Stream ' + str(self.numAudioTracks) + '/' +
+								  str(self.totalAudioTracks) + '...')
 
 		self.ffmpegEncodeProcess.finished.connect(self.startNeroAacEncode)
 
@@ -450,9 +459,9 @@ class MainWindow(QWidget, FileManagement):
 		self.neroAacEncodeProcess = QProcess()
 
 		now = datetime.datetime.now()
-		self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-			str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-			']  Finished Encoding Audio Stream')
+		self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+								  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+								  ']  Finished Encoding Audio Stream')
 
 		print('audiotrack ' + str(self.numAudioTracks))
 		print('totalaudiotrack ' + str(self.totalAudioTracks))
@@ -477,26 +486,26 @@ class MainWindow(QWidget, FileManagement):
 		MI.Inform()
 
 		mkvMergeCmd = ''
-		if self.encodeConfig.get('System','architecture') == 32:
+		if self.encodeConfig.get('System', 'architecture') == 32:
 			mkvMergeCmd += os.path.normpath('./tools/' + 'mkvmerge32.exe ')
 		else:
 			mkvMergeCmd += os.path.normpath('./tools/' + 'mkvmerge64.exe ')
 
-		mkvMergeCmd += ('-o "' + os.path.normpath(self.outputLineEdit.text() + 
-			'/' + self.fileList.item(self.curInputFile - 1).text()[:-4] + 
-			'[Encoded].mkv"'))
+		mkvMergeCmd += ('-o "' + os.path.normpath(self.outputLineEdit.text() +
+												  '/' + self.fileList.item(self.curInputFile - 1).text()[:-4] +
+												  '[Encoded].mkv"'))
 
-		self.encodedFile = (os.path.normpath(self.outputLineEdit.text() + 
-			'/' + self.fileList.item(self.curInputFile - 1).text()[:-4] + 
-			'[Encoded].mkv'))
+		self.encodedFile = (os.path.normpath(self.outputLineEdit.text() +
+											 '/' + self.fileList.item(self.curInputFile - 1).text()[:-4] +
+											 '[Encoded].mkv'))
 		print(self.encodedFile)
 
 		if not MI.Get(Stream.Video, 0, "Language") == '':
-			mkvMergeCmd += (' --language "0:' + 
-				MI.Get(Stream.Video, 0, "Language") + '"')
+			mkvMergeCmd += (' --language "0:' +
+							MI.Get(Stream.Video, 0, "Language") + '"')
 
 		mkvMergeCmd += (' "' + os.path.normpath('./temp/Output.mkv') + '" ')
-		if self.encodeConfig.getboolean('Misc','audiosource'):
+		if self.encodeConfig.getboolean('Misc', 'audiosource'):
 			mkvMergeCmd += ('-D "' + os.path.normpath(
 				self.fileList.item(self.curInputFile - 1).data(1001)) + '"')
 		else:
@@ -505,14 +514,14 @@ class MainWindow(QWidget, FileManagement):
 
 				if not MI.Get(Stream.Audio, i, "Language") == '':
 					mkvMergeCmd += ('--language "0:' +
-						MI.Get(Stream.Audio, i, "Language") + '" ')
+									MI.Get(Stream.Audio, i, "Language") + '" ')
 
-				mkvMergeCmd += ('--track-name "0:AAC LC ' + 
-					self.encodeConfig.get('Misc','audioquality') + '" "' 
-					+ os.path.normpath('./temp/OutputAudio' + str(i+1) + 
-					'.aac" '))
-				# MI.Get(Stream.Audio, i, "Title") + '" "' + os.path.normpath(
-				# 	'./temp/OutputAudio' + str(i+1) + '.aac" '))
+				mkvMergeCmd += ('--track-name "0:AAC LC ' +
+								self.encodeConfig.get('Misc', 'audioquality') + '" "'
+								+ os.path.normpath('./temp/OutputAudio' + str(i + 1) +
+												   '.aac" '))
+			# MI.Get(Stream.Audio, i, "Title") + '" "' + os.path.normpath(
+			# 	'./temp/OutputAudio' + str(i+1) + '.aac" '))
 
 			mkvMergeCmd += ('-D -A "' + os.path.normpath(
 				self.fileList.item(self.curInputFile - 1).data(1001)) + '"')
@@ -523,9 +532,9 @@ class MainWindow(QWidget, FileManagement):
 
 		MI.Close()
 		now = datetime.datetime.now()
-		self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-			str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-			']  Merging Files...')
+		self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+								  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+								  ']  Merging Files...')
 
 		self.mkvMergeProcess.finished.connect(self.startCRCProcess)
 
@@ -546,9 +555,9 @@ class MainWindow(QWidget, FileManagement):
 		self.encodeProgressLabel.setText('Generating CRC...')
 
 		now = datetime.datetime.now()
-		self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-			str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-			']  Generating CRC...')
+		self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+								  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+								  ']  Generating CRC...')
 
 		print("Starting crc process")
 		prev = 0
@@ -556,10 +565,10 @@ class MainWindow(QWidget, FileManagement):
 			prev = zlib.crc32(eachLine, prev)
 			QCoreApplication.processEvents()
 
-		crc = "%X"%(prev & 0xFFFFFFFF)
+		crc = "%X" % (prev & 0xFFFFFFFF)
 		print(crc)
 		os.rename(self.encodedFile, self.encodedFile[0:-13] + '[' + crc + ']' +
-			'.mkv')
+				  '.mkv')
 		self.pauseEncodeButton.setVisible(True)
 		self.stopEncodeButton.setVisible(True)
 		self.startNextEncode()
@@ -576,21 +585,21 @@ class MainWindow(QWidget, FileManagement):
 			files = glob.glob(os.path.normpath('./temp/*'))
 			for f in files:
 				os.remove(f)
-			
+
 			self.curInputFile += 1
 			self.mediaInfoText.append('')
-			self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-				str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-				']  Encoding file ' + str(self.curInputFile) + '/' + 
-				str(self.totalInputFiles) + '  -  ' + 
-				self.fileList.item(self.curInputFile - 1).text())
+			self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+									  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+									  ']  Encoding file ' + str(self.curInputFile) + '/' +
+									  str(self.totalInputFiles) + '  -  ' +
+									  self.fileList.item(self.curInputFile - 1).text())
 
 			if not os.path.isfile(os.path.normpath(
-				self.fileList.item(self.curInputFile - 1).data(1001))):
-				self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-				str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-				']  Error - file not found: ' + 
-				self.fileList.item(self.curInputFile - 1).data(1001))
+					self.fileList.item(self.curInputFile - 1).data(1001))):
+				self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+										  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+										  ']  Error - file not found: ' +
+										  self.fileList.item(self.curInputFile - 1).data(1001))
 				self.processQueue.get()
 				self.startNextEncode()
 			else:
@@ -607,13 +616,13 @@ class MainWindow(QWidget, FileManagement):
 				self.currentProcess = psutil.Process(
 					self.process.processId())
 		else:
-			self.mediaInfoText.append('\n[' + str(now.date()) + ' ' + 
-				str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-				']  Encoding Complete')
+			self.mediaInfoText.append('\n[' + str(now.date()) + ' ' +
+									  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+									  ']  Encoding Complete')
 
 			self.finishEncode()
 
-	def finishEncode(self, halt = False):
+	def finishEncode(self, halt=False):
 		print("finished encode")
 		files = glob.glob(os.path.normpath('./temp/*'))
 		for f in files:
@@ -649,23 +658,23 @@ class MainWindow(QWidget, FileManagement):
 		config = configparser.ConfigParser()
 		config.read(os.path.normpath('./data/options.ini'))
 
-		if config.getboolean('Main','Shutdown') and not halt:
+		if config.getboolean('Main', 'Shutdown') and not halt:
 			subprocess.call(["shutdown", "-f", "-s", "-t", "60"])
 
 	def updateMediaInfoGroupBox(self):
 		self.mediaInfoGroupBox.setTitle('MediaInfo')
 
-
 	"""
 	Kill override for Encoding Process
 	"""
+
 	def pauseEncode(self):
 		self.currentProcess.suspend()
 
 		now = datetime.datetime.now()
-		self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-			str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-			']  Process Paused ')
+		self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+								  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+								  ']  Process Paused ')
 
 		self.resumeEncodeButton.setVisible(True)
 		self.pauseEncodeButton.setVisible(False)
@@ -676,16 +685,16 @@ class MainWindow(QWidget, FileManagement):
 		self.pauseEncodeButton.setVisible(True)
 
 		now = datetime.datetime.now()
-		self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-			str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-			']  Process Resumed ')
+		self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+								  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+								  ']  Process Resumed ')
 
 	def stopEncode(self):
 		exitDialog = QMessageBox(self)
 		exitDialog.setWindowTitle('Confirm Rending')
 
 		exitDialog.setText(
-			'Are you sure you want to halt the encoding process?\n' + 
+			'Are you sure you want to halt the encoding process?\n' +
 			'Unfinished encodes will be cast into Emptiness.')
 
 		exitDialog.setStandardButtons(
@@ -696,9 +705,9 @@ class MainWindow(QWidget, FileManagement):
 			return -1
 
 		now = datetime.datetime.now()
-		self.mediaInfoText.append('[' + str(now.date()) + ' ' + 
-			str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) + 
-			']  Process Stopped ')
+		self.mediaInfoText.append('[' + str(now.date()) + ' ' +
+								  str(now.hour) + ':' + str(now.minute) + ':' + str(now.second) +
+								  ']  Process Stopped ')
 
 		while not self.processQueue.empty():
 			self.processQueue.get()
@@ -716,6 +725,7 @@ class MainWindow(QWidget, FileManagement):
 	"""
 	Main menu functions
 	"""
+
 	def center(self):
 		winGeo = self.frameGeometry()
 		centerPoint = QDesktopWidget().availableGeometry().center()
@@ -735,18 +745,18 @@ class MainWindow(QWidget, FileManagement):
 			SettingsDialog.defaultConfig(self, 'Default')
 			self.profileComboBox.addItem('Default')
 
-	def refreshProfileList(self, selected = None):
+	def refreshProfileList(self, selected=None):
 		self.findProfiles()
 		self.profileComboBox.setCurrentIndex(
 			self.profileComboBox.findText(selected))
 
 	def closeEvent(self, event):
-		if (self.process.state() == QProcess.NotRunning and 
-			self.audioStreamProcess.state() == QProcess.NotRunning and
-			self.audioStreamProcess.state() == QProcess.NotRunning and
-			self.ffmpegEncodeProcess.state() == QProcess.NotRunning and
-			self.neroAacEncodeProcess.state() == QProcess.NotRunning and
-			self.mkvMergeProcess.state() == QProcess.NotRunning):
+		if (self.process.state() == QProcess.NotRunning and
+					self.audioStreamProcess.state() == QProcess.NotRunning and
+					self.audioStreamProcess.state() == QProcess.NotRunning and
+					self.ffmpegEncodeProcess.state() == QProcess.NotRunning and
+					self.neroAacEncodeProcess.state() == QProcess.NotRunning and
+					self.mkvMergeProcess.state() == QProcess.NotRunning):
 
 			self.updateOptions()
 
@@ -763,7 +773,7 @@ class MainWindow(QWidget, FileManagement):
 			# exitDialog.setDefaultButton(QMessageBox.No)
 
 			# if (exitDialog.exec_() == QMessageBox.Yes):
-				
+
 
 			if (self.stopEncode() != -1):
 
@@ -776,11 +786,11 @@ class MainWindow(QWidget, FileManagement):
 		config = configparser.ConfigParser()
 		config.read(os.path.normpath('./data/options.ini'))
 
-		if config.getboolean('Main','RememberProfile'):
+		if config.getboolean('Main', 'RememberProfile'):
 			config['Main']['PreviousProfile'] = (
 				self.profileComboBox.currentText())
 
-		if config.getboolean('Main','RememberOutput'):
+		if config.getboolean('Main', 'RememberOutput'):
 			config['Main']['PreviousOutput'] = self.outputLineEdit.text()
 
 		with open('./data/options.ini', 'w') as configfile:

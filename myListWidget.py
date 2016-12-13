@@ -1,15 +1,15 @@
 import os.path
 
-from PyQt5.QtWidgets import (QListWidget, QListWidgetItem, QAbstractItemView,
-	QMessageBox, QApplication)
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (QListWidget, QListWidgetItem, QMessageBox, QApplication)
+
 
 class MyListWidget(QListWidget):
 	def __init__(self, parent):
 		super(MyListWidget, self).__init__(parent)
-		# self.setAcceptDrops(True)
-		# self.setDragDropMode(QAbstractItemView.InternalMove)
+
+	# self.setAcceptDrops(True)
+	# self.setDragDropMode(QAbstractItemView.InternalMove)
 
 	def dragEnterEvent(self, event):
 		QApplication.setActiveWindow(self)
@@ -25,11 +25,11 @@ class MyListWidget(QListWidget):
 		if event.mimeData().hasUrls():
 			for url in event.mimeData().urls():
 				if url.toLocalFile().lower().endswith(
-				('.webm', '.mkv', '.flv', '.vob', '.ogv', '.ogg', '.drc', 
-				'.mng', '.avi ', ',.mov', '.qt', '.wmv', '.yuv', '.rm', 
-				'.rmvb', '.asf', '.mp4', '.m4p ', ',.m4v', '.mpg', '.mp2', 
-				'.mpeg', '.mpe', 'mpv', '.m2v', '.svi', '.3gp ',
-				',.3g2', '.mxf', '.roq', '.nsv')):
+						('.webm', '.mkv', '.flv', '.vob', '.ogv', '.ogg', '.drc',
+						 '.mng', '.avi ', ',.mov', '.qt', '.wmv', '.yuv', '.rm',
+						 '.rmvb', '.asf', '.mp4', '.m4p ', ',.m4v', '.mpg', '.mp2',
+						 '.mpeg', '.mpe', 'mpv', '.m2v', '.svi', '.3gp ',
+						 ',.3g2', '.mxf', '.roq', '.nsv')):
 					itemToAdd = QListWidgetItem()
 					itemToAdd.setText(os.path.basename(url.toLocalFile()))
 					itemToAdd.setData(1001, url.toLocalFile())
@@ -47,4 +47,4 @@ class MyListWidget(QListWidget):
 						'./Icons/warning.png')))
 					invalidFormatDialog.exec_()
 
-		super(MyListWidget,self).dropEvent(event)
+		super(MyListWidget, self).dropEvent(event)

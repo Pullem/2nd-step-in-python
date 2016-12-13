@@ -1,10 +1,12 @@
-import os, sys, configparser, subprocess
-import qdarkstyle
+import configparser
+import os
+import subprocess
 
-from PyQt5.QtWidgets import (QWidget, QGridLayout, QDialog, QCheckBox, QLabel, 
-	QPushButton, QRadioButton, QSizePolicy, QLayout)
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtWidgets import (QGridLayout, QDialog, QCheckBox, QLabel,
+							 QPushButton)
+
 
 class OptionsDialog:
 	def __init__(self, win):
@@ -46,8 +48,8 @@ class OptionsDialog:
 		grid.addWidget(self.okButton, 4, 2)
 		grid.addWidget(self.cancelButton, 4, 3)
 
-		self.optionsWindow = QDialog(self.mainWindow, 
-			Qt.WindowCloseButtonHint)
+		self.optionsWindow = QDialog(self.mainWindow,
+									 Qt.WindowCloseButtonHint)
 		self.optionsWindow.setWindowIcon(QIcon(os.path.normpath(
 			'./Icons/transparent.png')))
 		self.optionsWindow.setWindowTitle('Options')
@@ -63,13 +65,13 @@ class OptionsDialog:
 		config = configparser.ConfigParser()
 		config.read(os.path.normpath('./data/options.ini'))
 
-		self.shutdownCheckBox.setChecked(config.getboolean('Main','Shutdown'))
+		self.shutdownCheckBox.setChecked(config.getboolean('Main', 'Shutdown'))
 
 		self.profileCheckBox.setChecked(
-			config.getboolean('Main','RememberProfile'))
+			config.getboolean('Main', 'RememberProfile'))
 
 		self.outputDirectoryCheckBox.setChecked(
-			config.getboolean('Main','RememberOutput'))
+			config.getboolean('Main', 'RememberOutput'))
 
 	def cancelShutdown(self):
 		subprocess.call(["shutdown", "-a"])

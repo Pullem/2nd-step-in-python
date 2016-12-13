@@ -1,12 +1,14 @@
-import os, sys, platform, configparser, multiprocessing
-import qdarkstyle
+import configparser
+import multiprocessing
+import os
+import platform
 
-from PyQt5.QtWidgets import (QTabWidget, QWidget, QGridLayout, QDialog, 
-	QInputDialog, QMessageBox, QGroupBox, QLabel, QComboBox, QPushButton, 
-	QSpinBox, QDoubleSpinBox, QSlider, QCheckBox, QTextEdit, QTextBrowser, 
-	QSizePolicy)
-from PyQt5.QtGui import QIcon, QTextOption
 from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QIcon, QTextOption
+from PyQt5.QtWidgets import (QTabWidget, QWidget, QGridLayout, QDialog,
+							 QInputDialog, QMessageBox, QGroupBox, QLabel, QComboBox, QPushButton,
+							 QSpinBox, QDoubleSpinBox, QSlider, QCheckBox, QTextEdit, QSizePolicy)
+
 
 class SettingsDialog:
 	def __init__(self, win, selected):
@@ -109,10 +111,10 @@ class SettingsDialog:
 		self.restoreProfileButton.clicked.connect(self.loadProfileSettings)
 
 	def tabChanged(self):
-		if ((self.quickSettingsCheckBox.isChecked() 
-			and self.tabs.currentIndex() == 4) or 
-			(not self.quickSettingsCheckBox.isChecked() 
-			and self.tabs.currentIndex() == 1)):
+		if ((self.quickSettingsCheckBox.isChecked()
+			 and self.tabs.currentIndex() == 4) or
+				(not self.quickSettingsCheckBox.isChecked()
+				 and self.tabs.currentIndex() == 1)):
 			profileName = self.profileComboBox.currentText()
 
 			config = configparser.ConfigParser()
@@ -130,10 +132,10 @@ class SettingsDialog:
 			self.deleteProfileButton.setEnabled(False)
 			print("delete profile button disabled")
 
-
 	"""
 	Creating the Common Tab Widgets
 	"""
+
 	def setCommonTab(self):
 		print("Setting Common Tab")
 
@@ -249,7 +251,6 @@ Reveals more x264 settings that can be modified.\n\
 Don't worry, there are tooltips for each setting!")
 		self.quickSettingsCheckBox.setStyleSheet('QToolTip {padding: -1px; opacity: 255}')
 
-
 	def encodingModeChanged(self):
 		if self.encodingModeComboBox.currentText() == 'Constant Quantizer':
 			self.encodingModeValueLabel.setText('Quantizer')
@@ -259,13 +260,13 @@ Don't worry, there are tooltips for each setting!")
 			self.encodingModeValueDoubleSpinBox.setSingleStep(1)
 			self.encodingModeValueDoubleSpinBox.setDecimals(0)
 			self.encodingModeValueDoubleSpinBox.setToolTip(
-"--qp <integer>\n\
-Encodes the video in Constant Quantizer (CQ) mode.\n\
-The value specifies the Pframe quantizer.\n\
-The quantizer used for I- and B- frames are derived from –ipratio and –pbratio.\n\n\
-Values: 0-81 (0=lossless)\n\
-Default: not set\n\
-Recommended: --crf")
+				"--qp <integer>\n\
+				Encodes the video in Constant Quantizer (CQ) mode.\n\
+				The value specifies the Pframe quantizer.\n\
+				The quantizer used for I- and B- frames are derived from –ipratio and –pbratio.\n\n\
+				Values: 0-81 (0=lossless)\n\
+				Default: not set\n\
+				Recommended: --crf")
 			self.encodingModeValueDoubleSpinBox.setStyleSheet(
 				'QToolTip {padding: -1px; opacity: 255}')
 
@@ -277,20 +278,19 @@ Recommended: --crf")
 			self.encodingModeValueDoubleSpinBox.setSingleStep(0.1)
 			self.encodingModeValueDoubleSpinBox.setDecimals(1)
 			self.encodingModeValueDoubleSpinBox.setToolTip(
-"--crf <float>\n\
-Constant Ratefactor, is a type of rate control in which ’quality’ is targeted.\n\
-The value specifies the quantizer. The idea of CRF is to give the same or higher\n\
-perceptual quality in a smaller size. This is achieved by using less bitrate for \n\
-high motion frames and redistribute these bits for still frames. The reason behind\n\
-this is that high motion frames are deemed less important as a decrease in quality\n\
-is difficult to notice while details in a still frame are more noticeable and would\n\
-require a significantly higher bitrate to achieve a good perceptual quality.\n\n\
-Values: -12-51 (-12=lossless | 18=high | 23=average | 28+=low)\n\
-Default: 23.0\n\
-Recommended: 17.0-21.0")
+				"--crf <float>\n\
+				Constant Ratefactor, is a type of rate control in which ’quality’ is targeted.\n\
+				The value specifies the quantizer. The idea of CRF is to give the same or higher\n\
+				perceptual quality in a smaller size. This is achieved by using less bitrate for \n\
+				high motion frames and redistribute these bits for still frames. The reason behind\n\
+				this is that high motion frames are deemed less important as a decrease in quality\n\
+				is difficult to notice while details in a still frame are more noticeable and would\n\
+				require a significantly higher bitrate to achieve a good perceptual quality.\n\n\
+				Values: -12-51 (-12=lossless | 18=high | 23=average | 28+=low)\n\
+				Default: 23.0\n\
+				Recommended: 17.0-21.0")
 			self.encodingModeValueDoubleSpinBox.setStyleSheet(
 				'QToolTip {padding: -1px; opacity: 255}')
-
 
 	def presetValueChanged(self):
 		if self.presetSlider.value() == 0:
@@ -335,6 +335,7 @@ Recommended: 17.0-21.0")
 	"""
 	Creating the Frame-type Tab Widgets
 	"""
+
 	def setFrameTypeTab(self):
 		print('Setting Frame-type Tab')
 
@@ -342,12 +343,12 @@ Recommended: 17.0-21.0")
 		self.deblockingCheckBox.stateChanged.connect(
 			self.deblockingStateChanged)
 		self.deblockingCheckBox.setToolTip(
-"--no-deblock (to disable)\n\
-One of H.264 main features that controls the amount of blocking artifacts\n\
-from motion estimation with the tradeoff of detail. This requires a small\n\
-amount of decoding CPU but can significantly increase quality.\n\n\
-Default: enabled\n\
-Recommended: enabled")
+			"--no-deblock (to disable)\n\
+			One of H.264 main features that controls the amount of blocking artifacts\n\
+			from motion estimation with the tradeoff of detail. This requires a small\n\
+			amount of decoding CPU but can significantly increase quality.\n\n\
+			Default: enabled\n\
+			Recommended: enabled")
 		self.deblockingCheckBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -356,12 +357,12 @@ Recommended: enabled")
 		self.deblockingStrSpinBox.setMinimum(-3)
 		self.deblockingStrSpinBox.setMaximum(3)
 		self.deblockingStrSpinBox.setToolTip(
-"--deblock <integer>:<integer>\n\
-The first value is called deblocking strength (alpha deblocking).\n\
-Alpha deblocking affects the total amount of deblocking applied on the picture.\n\
-A higher alpha value increases the amount of deblocking but destroys more detail.\n\n\
-Default: 0\n\
-Recommended: -1 (animation)")
+			"--deblock <integer>:<integer>\n\
+			The first value is called deblocking strength (alpha deblocking).\n\
+			Alpha deblocking affects the total amount of deblocking applied on the picture.\n\
+			A higher alpha value increases the amount of deblocking but destroys more detail.\n\n\
+			Default: 0\n\
+			Recommended: -1 (animation)")
 		self.deblockingStrSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -370,13 +371,13 @@ Recommended: -1 (animation)")
 		self.deblockingThresholdSpinBox.setMinimum(-3)
 		self.deblockingThresholdSpinBox.setMaximum(3)
 		self.deblockingThresholdSpinBox.setToolTip(
-"--deblock <integer>:<integer>\n\
-The second value is called deblocking threshold (beta deblocking).\n\
-Beta deblocking determines if something in a block is a detail when\n\
-deblocking is applied to it. Lower beta values apply less deblocking\n\
-to more flat blocks when details are present.\n\n\
-Default: 0\n\
-Recommended: -1 (animation)")
+			"--deblock <integer>:<integer>\n\
+			The second value is called deblocking threshold (beta deblocking).\n\
+			Beta deblocking determines if something in a block is a detail when\n\
+			deblocking is applied to it. Lower beta values apply less deblocking\n\
+			to more flat blocks when details are present.\n\n\
+			Default: 0\n\
+			Recommended: -1 (animation)")
 		self.deblockingThresholdSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -388,16 +389,16 @@ Recommended: -1 (animation)")
 		self.gopMaxSizeSpinBox.setMaximum(1000)
 		self.gopMaxSizeSpinBox.setSingleStep(10)
 		self.gopMaxSizeSpinBox.setToolTip(
-"--keyint <integer>\n\
-Sets the max interval between IDR-frames (keyframes or Group of pictures (GOP) length).\n\
-This trades off seeking file seekability with compression efficiency. IDRframes are\n\
-'delimiters' in the stream and are I-frames, meaning players can start decoding from the\n\
-nearest I-frame instead from the beginning. Therefore they can be used as seek points in\n\
-a video.\n\
-When encoding Blu-ray, broadcast, live streaming or other similar videos,\n\
-a significantly lower GOP length may be required.\n\n\
-Default: 250\n\
-Recommended: 250, --fps*10")
+			"--keyint <integer>\n\
+			Sets the max interval between IDR-frames (keyframes or Group of pictures (GOP) length).\n\
+			This trades off seeking file seekability with compression efficiency. IDRframes are\n\
+			'delimiters' in the stream and are I-frames, meaning players can start decoding from the\n\
+			nearest I-frame instead from the beginning. Therefore they can be used as seek points in\n\
+			a video.\n\
+			When encoding Blu-ray, broadcast, live streaming or other similar videos,\n\
+			a significantly lower GOP length may be required.\n\n\
+			Default: 250\n\
+			Recommended: 250, --fps*10")
 		self.gopMaxSizeSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -406,25 +407,25 @@ Recommended: 250, --fps*10")
 		self.gopMinSizeSpinBox.setMinimum(0)
 		self.gopMinSizeSpinBox.setMaximum(100)
 		self.gopMinSizeSpinBox.setToolTip(
-"--min-keyint <integer>\n\
-Sets the minimum GOP length, minimum distance between IDR-frames.\n\
-Playback can only be started at an IDR-frame. Generally the minimum\n\
-value should be the framerate of the video.\n\n\
-Default: 0, auto (min(--keyint/10, --fps))\n\
-Recommended: 0, auto")
+			"--min-keyint <integer>\n\
+			Sets the minimum GOP length, minimum distance between IDR-frames.\n\
+			Playback can only be started at an IDR-frame. Generally the minimum\n\
+			value should be the framerate of the video.\n\n\
+			Default: 0, auto (min(--keyint/10, --fps))\n\
+			Recommended: 0, auto")
 		self.gopMinSizeSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
 		self.bframeWeightCheckBox = QCheckBox(
 			'Weighted Prediction for B-Frames')
 		self.bframeWeightCheckBox.setToolTip(
-"--no-weightb (to disable)\n\
-Enables/disables weighted prediction for weightb. Enabling weightb produces B-Frames\n\
-that are more accurate by allowing non-symmetric weighting of reference frames. This\n\
-feature has a negligible impact on speed. Since weighted B-frames generally improves\n\
-visual quality, it is better to have it enabled.\n\n\
-Default: enabled\n\
-Recommended: enabled")
+			"--no-weightb (to disable)\n\
+			Enables/disables weighted prediction for weightb. Enabling weightb produces B-Frames\n\
+			that are more accurate by allowing non-symmetric weighting of reference frames. This\n\
+			feature has a negligible impact on speed. Since weighted B-frames generally improves\n\
+			visual quality, it is better to have it enabled.\n\n\
+			Default: enabled\n\
+			Recommended: enabled")
 		self.bframeWeightCheckBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -434,11 +435,11 @@ Recommended: enabled")
 		self.bframeNumberSpinBox.setMaximum(16)
 		self.bframeNumberSpinBox.valueChanged.connect(self.bframeNumberChanged)
 		self.bframeNumberSpinBox.setToolTip(
-"--bframes <integer>\n\
-Sets the maximum number of concurrent B-frames that can be used.\n\
-The average quality is controlled by --pbratio.\n\n\
-Default: 3\n\
-Recommended: 8-16")
+			"--bframes <integer>\n\
+			Sets the maximum number of concurrent B-frames that can be used.\n\
+			The average quality is controlled by --pbratio.\n\n\
+			Default: 3\n\
+			Recommended: 8-16")
 		self.bframeNumberSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -448,12 +449,12 @@ Recommended: 8-16")
 		self.bframeBiasSpinBox.setMaximum(100)
 		self.bframeBiasSpinBox.setSingleStep(5)
 		self.bframeBiasSpinBox.setToolTip(
-"--b-bias <integer>\n\
-Controls the likelihood of B-frames being used over P-frames.\n\
-Values larger than 0 increase the weighting towards B-frame,\n\
-while values less than 0 do the reverse.\n\n\
-Default: 0\n\
-Recommended: 0")
+			"--b-bias <integer>\n\
+			Controls the likelihood of B-frames being used over P-frames.\n\
+			Values larger than 0 increase the weighting towards B-frame,\n\
+			while values less than 0 do the reverse.\n\n\
+			Default: 0\n\
+			Recommended: 0")
 		self.bframeBiasSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -463,17 +464,17 @@ Recommended: 0")
 		self.bframeAdaptiveComboBox.addItem('Fast')
 		self.bframeAdaptiveComboBox.addItem('Optimal')
 		self.bframeAdaptiveComboBox.setToolTip(
-"--b-adapt <integer>\n\
-Sets the adaptive B-frame placement algorithm,\n\
-deciding whether a P- or B-frame is placed.\n\n\
-Values:\n\
-	0: Disable. Always pick B-frames.\n\
-	1: ’Fast’ algorithm, speed slightly increases\n\
-	    with higher –b-frames setting (use --b-frames 16)\n\
-	2: Primary profile for broadcast and storage.\n\
-	    Adopted by HD DVD and Blu-ray.\n\
-Default: 1\n\
-Recommended: 2")
+			"--b-adapt <integer>\n\
+			Sets the adaptive B-frame placement algorithm,\n\
+			deciding whether a P- or B-frame is placed.\n\n\
+			Values:\n\
+				0: Disable. Always pick B-frames.\n\
+				1: ’Fast’ algorithm, speed slightly increases\n\
+					with higher –b-frames setting (use --b-frames 16)\n\
+				2: Primary profile for broadcast and storage.\n\
+					Adopted by HD DVD and Blu-ray.\n\
+			Default: 1\n\
+			Recommended: 2")
 		self.bframeAdaptiveComboBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -483,18 +484,18 @@ Recommended: 2")
 		self.bframePyramidComboBox.addItem('Strict')
 		self.bframePyramidComboBox.addItem('Normal')
 		self.bframePyramidComboBox.setToolTip(
-"--b-pyramid <string>\n\
-Allows B-frames to be used as references for other frames. B-frames references have\n\
-a quantizer between I-frames and P-frames. This setting is generally beneficial but\n\
-increases the Decoded Picture Buffer (DPB) size required for playback which may have\n\
-compatibility issues. Quality increase is negligible and increases decoding complexity\n\
-but also increases compression.\n\n\
-Values:\n\
-	-none: do not allow B-frames to be used as references.\n\
-	-strict: allow one B-frame per minigop to be used as reference, Bluray standard.\n\
-	-normal: allow many B-frames per minigop to be used as reference.\n\
-Default: normal\n\
-Recommended: normal, strict (if abiding by Blu-ray standards)")
+			"--b-pyramid <string>\n\
+			Allows B-frames to be used as references for other frames. B-frames references have\n\
+			a quantizer between I-frames and P-frames. This setting is generally beneficial but\n\
+			increases the Decoded Picture Buffer (DPB) size required for playback which may have\n\
+			compatibility issues. Quality increase is negligible and increases decoding complexity\n\
+			but also increases compression.\n\n\
+			Values:\n\
+				-none: do not allow B-frames to be used as references.\n\
+				-strict: allow one B-frame per minigop to be used as reference, Bluray standard.\n\
+				-normal: allow many B-frames per minigop to be used as reference.\n\
+			Default: normal\n\
+			Recommended: normal, strict (if abiding by Blu-ray standards)")
 		self.bframePyramidComboBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -503,14 +504,14 @@ Recommended: normal, strict (if abiding by Blu-ray standards)")
 		self.frameEncodingRefSpinBox.setMinimum(1)
 		self.frameEncodingRefSpinBox.setMaximum(16)
 		self.frameEncodingRefSpinBox.setToolTip(
-"--ref <integer>\n\
-Controls the size of the Decoded Picture Buffer (DPB). The value controls\n\
-the number of previous frames each P-frame can use as references. A higher\n\
-value increases the DPB, which means hardware playback devices usually have\n\
-strict limits for the number of refs they can handle. If adhering to the\n\
-H.264 spec, the max refs for 720p and 1080p are 9 and 4 respectively.\n\n\
-Default: 3\n\
-Recommended: 16 (animation)")
+			"--ref <integer>\n\
+			Controls the size of the Decoded Picture Buffer (DPB). The value controls\n\
+			the number of previous frames each P-frame can use as references. A higher\n\
+			value increases the DPB, which means hardware playback devices usually have\n\
+			strict limits for the number of refs they can handle. If adhering to the\n\
+			H.264 spec, the max refs for 720p and 1080p are 9 and 4 respectively.\n\n\
+			Default: 3\n\
+			Recommended: 16 (animation)")
 		self.frameEncodingRefSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -519,17 +520,17 @@ Recommended: 16 (animation)")
 		self.frameEncodingSceneChangeSpinBox.setMinimum(0)
 		self.frameEncodingSceneChangeSpinBox.setMaximum(100)
 		self.frameEncodingSceneChangeSpinBox.setToolTip(
-"--scenecut <integer>\n\
-Sets the threshold for I/IDR frame placement (scene change detection). For every\n\
-frame, x264 calculates a metric to estimate how different it is from the previous frame.\n\
-If the value calculated is lower than the scenecut value, a ’scene-cut’ is detected. An\n\
-I-frame is placed if it has been less than –min-keyint frames since the last IDR frame,\n\
-otherwise an IDR frame is placed.\n\n\
-Default: 40\n\
-Recommended: 40")
+			"--scenecut <integer>\n\
+			Sets the threshold for I/IDR frame placement (scene change detection). For every\n\
+			frame, x264 calculates a metric to estimate how different it is from the previous frame.\n\
+			If the value calculated is lower than the scenecut value, a ’scene-cut’ is detected. An\n\
+			I-frame is placed if it has been less than –min-keyint frames since the last IDR frame,\n\
+			otherwise an IDR frame is placed.\n\n\
+			Default: 40\n\
+			Recommended: 40")
 		self.frameEncodingSceneChangeSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
-		
+
 	def deblockingStateChanged(self):
 		if self.deblockingCheckBox.isChecked():
 			self.deblockingStrLabel.setEnabled(True)
@@ -560,11 +561,10 @@ Recommended: 40")
 			self.bframePyramidLabel.setEnabled(True)
 			self.bframePyramidComboBox.setEnabled(True)
 
-
-
 	"""
 	Creating the Rate Control Widgets
 	"""
+
 	def setRateControlTab(self):
 		print('Setting Rate Control Tab')
 
@@ -578,11 +578,11 @@ Recommended: 40")
 		self.qpIMinSpinBox.setMaximum(50)
 		self.qpIMinSpinBox.setAlignment(Qt.AlignHCenter)
 		self.qpIMinSpinBox.setToolTip(
-"--qp-min <integer>[:<integer>:<integer>]\n\
-Defines the minimum quantizer used. The lower the value, the closer\n\
-the output is to the source. The first value is for I frames.\n\n\
-Default: 0\n\
-Recommended: 0")
+			"--qp-min <integer>[:<integer>:<integer>]\n\
+			Defines the minimum quantizer used. The lower the value, the closer\n\
+			the output is to the source. The first value is for I frames.\n\n\
+			Default: 0\n\
+			Recommended: 0")
 		self.qpIMinSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -591,11 +591,11 @@ Recommended: 0")
 		self.qpIMaxSpinBox.setMaximum(100)
 		self.qpIMaxSpinBox.setAlignment(Qt.AlignHCenter)
 		self.qpIMaxSpinBox.setToolTip(
-"--qp-max <integer>[:<integer>:<integer>]\n\
-Defines the maximum quantizer used. Users may want to set the value lower (30-40)\n\
-but adjustments are not necessary. The first value is for I frames.\n\n\
-Default: 81\n\
-Recommended: 30-50")
+			"--qp-max <integer>[:<integer>:<integer>]\n\
+			Defines the maximum quantizer used. Users may want to set the value lower (30-40)\n\
+			but adjustments are not necessary. The first value is for I frames.\n\n\
+			Default: 81\n\
+			Recommended: 30-50")
 		self.qpIMaxSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -606,11 +606,11 @@ Recommended: 30-50")
 		self.qpPMinSpinBox.setMaximum(50)
 		self.qpPMinSpinBox.setAlignment(Qt.AlignHCenter)
 		self.qpPMinSpinBox.setToolTip(
-"--qp-min <integer>[:<integer>:<integer>]\n\
-Defines the minimum quantizer used. The lower the value, the closer\n\
-the output is to the source. The second value is for P frames.\n\n\
-Default: 0\n\
-Recommended: 0")
+			"--qp-min <integer>[:<integer>:<integer>]\n\
+			Defines the minimum quantizer used. The lower the value, the closer\n\
+			the output is to the source. The second value is for P frames.\n\n\
+			Default: 0\n\
+			Recommended: 0")
 		self.qpPMinSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -619,11 +619,11 @@ Recommended: 0")
 		self.qpPMaxSpinBox.setMaximum(100)
 		self.qpPMaxSpinBox.setAlignment(Qt.AlignHCenter)
 		self.qpPMaxSpinBox.setToolTip(
-"--qp-max <integer>[:<integer>:<integer>]\n\
-Defines the maximum quantizer used. Users may want to set the value lower (30-40)\n\
-but adjustments are not necessary. The second value is for P frames.\n\n\
-Default: 81\n\
-Recommended: 30-50")
+			"--qp-max <integer>[:<integer>:<integer>]\n\
+			Defines the maximum quantizer used. Users may want to set the value lower (30-40)\n\
+			but adjustments are not necessary. The second value is for P frames.\n\n\
+			Default: 81\n\
+			Recommended: 30-50")
 		self.qpPMaxSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -634,11 +634,11 @@ Recommended: 30-50")
 		self.qpBMinSpinBox.setMaximum(50)
 		self.qpBMinSpinBox.setAlignment(Qt.AlignHCenter)
 		self.qpBMinSpinBox.setToolTip(
-"--qp-min <integer>[:<integer>:<integer>]\n\
-Defines the minimum quantizer used. The lower the value, the closer\n\
-the output is to the source. The third value is for B frames.\n\n\
-Default: 0\n\
-Recommended: 0")
+			"--qp-min <integer>[:<integer>:<integer>]\n\
+			Defines the minimum quantizer used. The lower the value, the closer\n\
+			the output is to the source. The third value is for B frames.\n\n\
+			Default: 0\n\
+			Recommended: 0")
 		self.qpBMinSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -647,11 +647,11 @@ Recommended: 0")
 		self.qpBMaxSpinBox.setMaximum(100)
 		self.qpBMaxSpinBox.setAlignment(Qt.AlignHCenter)
 		self.qpBMaxSpinBox.setToolTip(
-"--qp-max <integer>[:<integer>:<integer>]\n\
-Defines the maximum quantizer used. Users may want to set the value lower (30-40)\n\
-but adjustments are not necessary. The second value is for B frames.\n\n\
-Default: 81\n\
-Recommended: 30-50")
+			"--qp-max <integer>[:<integer>:<integer>]\n\
+			Defines the maximum quantizer used. Users may want to set the value lower (30-40)\n\
+			but adjustments are not necessary. The second value is for B frames.\n\n\
+			Default: 81\n\
+			Recommended: 30-50")
 		self.qpBMaxSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -660,11 +660,11 @@ Recommended: 30-50")
 		self.qpStepSpinBox.setMinimum(1)
 		self.qpStepSpinBox.setMaximum(50)
 		self.qpStepSpinBox.setToolTip(
-"--qpstep <integer>\n\
-Caps the maximum change in quantizer between two frames.\n\
-This will reduce the amount of any large jump in quality of the output.\n\n\
-Default: 4\n\
-Recommended: 4")
+			"--qpstep <integer>\n\
+			Caps the maximum change in quantizer between two frames.\n\
+			This will reduce the amount of any large jump in quality of the output.\n\n\
+			Default: 4\n\
+			Recommended: 4")
 		self.qpStepSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -675,17 +675,17 @@ Recommended: 4")
 		self.qCompSpinBox.setDecimals(2)
 		self.qCompSpinBox.setSingleStep(0.05)
 		self.qCompSpinBox.setToolTip(
-"--qpcomp <float>\n\
-Quantizer curve compression factor. A value of 0.0 = Constant bitrate,\n\
-1.0 = Constant Quantizer. Qcomp trades off the ratio of bits allocated\n\
-to 'expensive' or highmotion vs 'cheap' low-motion frames. A qcomp of\n\
-0.0 would make the quality of high-motion scenes look terrible while\n\
-low-motion scenes would look great but with wasted bitrate. With a qcomp\n\
-of 1.0, high-motion scenes would look great however a lot of bitrate is\n\
-wasted on each frame as well since these scenes have a lot of changing frames.\n\n\
-Values: 0.0-1.0\n\
-Default: 0.60\n\
-Recommended: 0.60")
+			"--qpcomp <float>\n\
+			Quantizer curve compression factor. A value of 0.0 = Constant bitrate,\n\
+			1.0 = Constant Quantizer. Qcomp trades off the ratio of bits allocated\n\
+			to 'expensive' or highmotion vs 'cheap' low-motion frames. A qcomp of\n\
+			0.0 would make the quality of high-motion scenes look terrible while\n\
+			low-motion scenes would look great but with wasted bitrate. With a qcomp\n\
+			of 1.0, high-motion scenes would look great however a lot of bitrate is\n\
+			wasted on each frame as well since these scenes have a lot of changing frames.\n\n\
+			Values: 0.0-1.0\n\
+			Default: 0.60\n\
+			Recommended: 0.60")
 		self.qCompSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -697,11 +697,11 @@ Recommended: 0.60")
 		self.qpIPRatioSpinBox.setDecimals(2)
 		self.qpIPRatioSpinBox.setSingleStep(0.05)
 		self.qpIPRatioSpinBox.setToolTip(
-"--ipratio <float>\n\
-Sets the target average increase in quality for I frames to P frames. A higher value\n\
-would increase the quality of I frames but lower the quality of P and B frames.\n\n\
-Default: 1.40\n\
-Recommended: 1.40")
+			"--ipratio <float>\n\
+			Sets the target average increase in quality for I frames to P frames. A higher value\n\
+			would increase the quality of I frames but lower the quality of P and B frames.\n\n\
+			Default: 1.40\n\
+			Recommended: 1.40")
 		self.qpIPRatioSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -712,11 +712,11 @@ Recommended: 1.40")
 		self.qpPBRatioSpinBox.setDecimals(2)
 		self.qpPBRatioSpinBox.setSingleStep(0.05)
 		self.qpPBRatioSpinBox.setToolTip(
-"--pbratio <float>\n\
-Sets the target average increase in quality for P frames to B frames. A higher\n\
-value would increase the quality of P frames but lower the quality of B frames.\n\n\
-Default: 1.30\n\
-Recommended: 1.30")
+			"--pbratio <float>\n\
+			Sets the target average increase in quality for P frames to B frames. A higher\n\
+			value would increase the quality of P frames but lower the quality of B frames.\n\n\
+			Default: 1.30\n\
+			Recommended: 1.30")
 		self.qpPBRatioSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -730,19 +730,19 @@ Recommended: 1.30")
 		self.aqModeComboBox.currentIndexChanged.connect(
 			self.aqModeValueChanged)
 		self.aqModeComboBox.setToolTip(
-"--aq-mode <integer>\n\
-Adaptive Quantization Mode is used to better distribute the available bits in the video.\n\n\
-Values:\n\
-	0: Do not use AQ.\n\
-	1: Variance AQ which allows AQ to redistribute bits across video and within frames.\n\
-	2: Auto-variance AQ which attempts to adapt strength per frame\n\
-	    (experimental – tends to over reallocate bits)\n\
-	3: Auto-variance AQ mod1, with bias towards dark scenes and grainy scenes.\n\
-	    Recommended as grainy and dark scenes generally requires a higher\n\
-	    bitrate to maintain quality.\n\
-	4: Auto-variance AQ mod2 (experimental, improves algorithm of aq-mode of 2).\n\
-Default: 1\n\
-Recommended: 3")
+			"--aq-mode <integer>\n\
+			Adaptive Quantization Mode is used to better distribute the available bits in the video.\n\n\
+			Values:\n\
+				0: Do not use AQ.\n\
+				1: Variance AQ which allows AQ to redistribute bits across video and within frames.\n\
+				2: Auto-variance AQ which attempts to adapt strength per frame\n\
+					(experimental – tends to over reallocate bits)\n\
+				3: Auto-variance AQ mod1, with bias towards dark scenes and grainy scenes.\n\
+					Recommended as grainy and dark scenes generally requires a higher\n\
+					bitrate to maintain quality.\n\
+				4: Auto-variance AQ mod2 (experimental, improves algorithm of aq-mode of 2).\n\
+			Default: 1\n\
+			Recommended: 3")
 		self.aqModeComboBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -753,24 +753,24 @@ Recommended: 3")
 		self.aqStrengthSpinBox.setMaximum(2.0)
 		self.aqStrengthSpinBox.setSingleStep(0.1)
 		self.aqStrengthSpinBox.setToolTip(
-"--aq-strength <float>\n\
-Sets the amount of bias towards low detail (‘flat’) macroblocks.\n\
-Reduces blocking and blurring in flat textured areas.\n\
-A higher value is recommended for grainy or animated sources.\n\n\
-Default: 1.0\n\
-Recommended: 1.30")
+			"--aq-strength <float>\n\
+			Sets the amount of bias towards low detail (‘flat’) macroblocks.\n\
+			Reduces blocking and blurring in flat textured areas.\n\
+			A higher value is recommended for grainy or animated sources.\n\n\
+			Default: 1.0\n\
+			Recommended: 1.30")
 		self.aqStrengthSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
 		self.mbTreeCheckBox = QCheckBox('MB-Tree')
 		self.mbTreeCheckBox.setToolTip(
-"--no-mbtree (to disable)\n\
-Enables/disables Macroblock-Tree Rate Control. It tracks the change from future to past\n\
-blocks across motion vectors. Therefore MB-Tree will only lower quality on the complex\n\
-parts of the scene instead of on the entire scene. Static frames will remain high quality.\n\
-MB-Tree greatly improves the overall quality and should always be enabled.\n\n\
-Default: enabled\n\
-Recommended: enabled")
+			"--no-mbtree (to disable)\n\
+			Enables/disables Macroblock-Tree Rate Control. It tracks the change from future to past\n\
+			blocks across motion vectors. Therefore MB-Tree will only lower quality on the complex\n\
+			parts of the scene instead of on the entire scene. Static frames will remain high quality.\n\
+			MB-Tree greatly improves the overall quality and should always be enabled.\n\n\
+			Default: enabled\n\
+			Recommended: enabled")
 		self.mbTreeCheckBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -779,11 +779,11 @@ Recommended: enabled")
 		self.frameLookaheadSpinBox.setMinimum(0)
 		self.frameLookaheadSpinBox.setMaximum(100)
 		self.frameLookaheadSpinBox.setToolTip(
-"--rc-lookahead <integer>\n\
-This setting sets the number of frames for the encoder to consider as well as\n\
-other factors before making a decision on the current frame type and quality.\n\n\
-Default: 40\n\
-Recommended: 40")
+			"--rc-lookahead <integer>\n\
+			This setting sets the number of frames for the encoder to consider as well as\n\
+			other factors before making a decision on the current frame type and quality.\n\n\
+			Default: 40\n\
+			Recommended: 40")
 		self.frameLookaheadSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -795,10 +795,10 @@ Recommended: 40")
 			self.aqStrengthLabel.setEnabled(True)
 			self.aqStrengthSpinBox.setEnabled(True)
 
-
 	"""
 	Creating the Analysis Widgets
 	"""
+
 	def setAdvancedTab(self):
 		print('Setting the Advanced Tab')
 
@@ -810,40 +810,40 @@ Recommended: 40")
 		self.meMethodComboBox.addItem('Exhaustive')
 		self.meMethodComboBox.addItem('Hadamard Exhaustive')
 		self.meMethodComboBox.setToolTip(
-"--me <string>\n\
-Sets the full-pixel motion estimation method.\n\n\
-Values:\n\
-	-dia: (diamond) The simplest search starting at the best predictor and checks\n\
-	  the motion vectors at a pixel upwards, left, down, and to the right. Picks\n\
-	  the best and repeats the process until it no longer finds any better vector.\n\
-	-hex: (hexagon) Similar to dia but uses a 2-range search of 6 surrounding pixels.\n\
-	  Considerably more efficient than dia and hardly any slower, a good choice for\n\
-	  general encoding.\n\
-	-umh: (uneven multi-hex) Considerably slower than hex but searches a complex\n\
-	  multi-hexagon pattern in order to avoid missing harder to find motion vectors.\n\
-	-esa: (exhaustive) An intelligent search of the entire motion space\n\
-	  within merange of the best predictor. Similar to a brute force method.\n\
-	  Considerably slower than umh and without much benefit.\n\
-	-tesa: (transformed exhaustive) Algorithm that attempts to appromiate the\n\
-	  effect of running a Hadamard transform comparison at each motion vector,\n\
-	  like exhaustive but better and slower.\n\
-Default: hex\n\
-Recommended: hex, umh")
+			"--me <string>\n\
+			Sets the full-pixel motion estimation method.\n\n\
+			Values:\n\
+				-dia: (diamond) The simplest search starting at the best predictor and checks\n\
+				  the motion vectors at a pixel upwards, left, down, and to the right. Picks\n\
+				  the best and repeats the process until it no longer finds any better vector.\n\
+				-hex: (hexagon) Similar to dia but uses a 2-range search of 6 surrounding pixels.\n\
+				  Considerably more efficient than dia and hardly any slower, a good choice for\n\
+				  general encoding.\n\
+				-umh: (uneven multi-hex) Considerably slower than hex but searches a complex\n\
+				  multi-hexagon pattern in order to avoid missing harder to find motion vectors.\n\
+				-esa: (exhaustive) An intelligent search of the entire motion space\n\
+				  within merange of the best predictor. Similar to a brute force method.\n\
+				  Considerably slower than umh and without much benefit.\n\
+				-tesa: (transformed exhaustive) Algorithm that attempts to appromiate the\n\
+				  effect of running a Hadamard transform comparison at each motion vector,\n\
+				  like exhaustive but better and slower.\n\
+			Default: hex\n\
+			Recommended: hex, umh")
 		self.meMethodComboBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
-		
+
 		self.meRangeLabel = QLabel('M.E. Range')
 		self.meRangeSpinBox = QSpinBox()
 		self.meRangeSpinBox.setMinimum(4)
 		self.meRangeSpinBox.setMaximum(64)
 		self.meRangeSpinBox.setToolTip(
-"--merange <integer>\n\
-Sets the max range of the motion search in pixels for the next frame. A high\n\
-merange (>64) is unlikely to find any new motion vectors that are useful as\n\
-the search will start at the predicted motion vector so ‘good’ motion vectors\n\
-are usually found close to the predicted one.\n\n\
-Default: 16\n\
-Recommended: 16, 16+ (hex, umh)")
+			"--merange <integer>\n\
+			Sets the max range of the motion search in pixels for the next frame. A high\n\
+			merange (>64) is unlikely to find any new motion vectors that are useful as\n\
+			the search will start at the predicted motion vector so ‘good’ motion vectors\n\
+			are usually found close to the predicted one.\n\n\
+			Default: 16\n\
+			Recommended: 16, 16+ (hex, umh)")
 		self.meRangeSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -864,30 +864,30 @@ Recommended: 16, 16+ (hex, umh)")
 		self.subPixelRefinementComboBox.currentIndexChanged.connect(
 			self.subPixelRefinementValueChanged)
 		self.subPixelRefinementComboBox.setToolTip(
-"--subme <integer>\n\
-Sets the subpixel estimation complexity. Higher values are better as it reduces\n\
-artifacts and retains fine details. Important encoding parameter, which determines\n\
-which algorithms are used for subpixel motion searching and partition decision.\n\
-Levels 1-5 controls the subpixel refinement strength.\n\
-Level 6 enables Rate-Distortion Optimization (RDO) for mode decision which\n\
-helps improve video quality in video compression. RDO levels considerably\n\
-slow down encoding speed.\n\
-Level 8 enables RDO for motion vectors and intra-prediction modes.\n\n\
-Values:\n\
-	0: Full Pixel only\n\
-	1: Quarter Pixel (QPel) SAD 1 iteration\n\
-	2: QPel SATD 2 iteration\n\
-	3: Half Pixel (HPel) on MB then QPel\n\
-	4: Always QPel\n\
-	5: Multi QPel and bi-directional motion estimation\n\
-	6: RD mode decision on I/P frames\n\
-	7: RD on all frames\n\
-	8: RD refinement after RD mode decision on I/P frames\n\
-	9: RD refinement on all frames\n\
-	10: QP-RD (requires –-trellis=2, --aq-mode>0)\n\
-	11: Full RD\n\
-Default: 7\n\
-Recommended: 7-10")
+			"--subme <integer>\n\
+			Sets the subpixel estimation complexity. Higher values are better as it reduces\n\
+			artifacts and retains fine details. Important encoding parameter, which determines\n\
+			which algorithms are used for subpixel motion searching and partition decision.\n\
+			Levels 1-5 controls the subpixel refinement strength.\n\
+			Level 6 enables Rate-Distortion Optimization (RDO) for mode decision which\n\
+			helps improve video quality in video compression. RDO levels considerably\n\
+			slow down encoding speed.\n\
+			Level 8 enables RDO for motion vectors and intra-prediction modes.\n\n\
+			Values:\n\
+				0: Full Pixel only\n\
+				1: Quarter Pixel (QPel) SAD 1 iteration\n\
+				2: QPel SATD 2 iteration\n\
+				3: Half Pixel (HPel) on MB then QPel\n\
+				4: Always QPel\n\
+				5: Multi QPel and bi-directional motion estimation\n\
+				6: RD mode decision on I/P frames\n\
+				7: RD on all frames\n\
+				8: RD refinement after RD mode decision on I/P frames\n\
+				9: RD refinement on all frames\n\
+				10: QP-RD (requires –-trellis=2, --aq-mode>0)\n\
+				11: Full RD\n\
+			Default: 7\n\
+			Recommended: 7-10")
 		self.subPixelRefinementComboBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -898,16 +898,16 @@ Recommended: 7-10")
 		self.motionVectorPredictionComboBox.addItem('Temporal')
 		self.motionVectorPredictionComboBox.addItem('Auto')
 		self.motionVectorPredictionComboBox.setToolTip(
-"--direct <string>\n\
-Sets the prediction mode for ‘direct’ motion vectors. Direct prediction tells x264\n\
-what method to use when applying motion estimation for certain parts of a B-frame.\n\n\
-Values:\n\
-	-none: Disables direct motion vectors (not recommended, waste bits and looks worse).\n\
-	-spatial: Tells x264 to predict motion based on other parts of the same frame.\n\
-	-temporal: Predicts motion based on the following P-frame.\n\
-	-auto: switches between prediction modes depending on which performed the best so far.\n\
-Default: spatial\n\
-Recommended: auto")
+			"--direct <string>\n\
+			Sets the prediction mode for ‘direct’ motion vectors. Direct prediction tells x264\n\
+			what method to use when applying motion estimation for certain parts of a B-frame.\n\n\
+			Values:\n\
+				-none: Disables direct motion vectors (not recommended, waste bits and looks worse).\n\
+				-spatial: Tells x264 to predict motion based on other parts of the same frame.\n\
+				-temporal: Predicts motion based on the following P-frame.\n\
+				-auto: switches between prediction modes depending on which performed the best so far.\n\
+			Default: spatial\n\
+			Recommended: auto")
 		self.motionVectorPredictionComboBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -919,15 +919,15 @@ Recommended: auto")
 		self.trellisComboBox.currentIndexChanged.connect(
 			self.trellisValueChanged)
 		self.trellisComboBox.setToolTip(
-"--trellis <integer>\n\
-Increases hard-edge details by increasing efficiency in data compression\n\
-at a somewhat slower speed. Usually improves overall quality of encodes.\n\
-Values:\n\
-	0: Disabled\n\
-	1: Enabled only on final encode of a macroblock\n\
-	2: Enabled on all mode decisions\n\
-Default: 1\n\
-Recommended: 1, 2")
+			"--trellis <integer>\n\
+			Increases hard-edge details by increasing efficiency in data compression\n\
+			at a somewhat slower speed. Usually improves overall quality of encodes.\n\
+			Values:\n\
+				0: Disabled\n\
+				1: Enabled only on final encode of a macroblock\n\
+				2: Enabled on all mode decisions\n\
+			Default: 1\n\
+			Recommended: 1, 2")
 		self.trellisComboBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -938,12 +938,12 @@ Recommended: 1, 2")
 		self.psyrdStrengthSpinBox.setDecimals(1)
 		self.psyrdStrengthSpinBox.setSingleStep(0.1)
 		self.psyrdStrengthSpinBox.setToolTip(
-"--psy-rd <float>:<float>\n\
-The first value is the Psy-RD strength, representing\n\
-the amount of bias in favor of detail retention.\n\
-psy-rd strength (requires --subme>=6)\n\n\
-Default: 1.0\n\
-Recommended: ~0.5 (animation)")
+			"--psy-rd <float>:<float>\n\
+			The first value is the Psy-RD strength, representing\n\
+			the amount of bias in favor of detail retention.\n\
+			psy-rd strength (requires --subme>=6)\n\n\
+			Default: 1.0\n\
+			Recommended: ~0.5 (animation)")
 		self.psyrdStrengthSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -954,24 +954,24 @@ Recommended: ~0.5 (animation)")
 		self.psyTrellisStrengthSpinBox.setDecimals(1)
 		self.psyTrellisStrengthSpinBox.setSingleStep(0.1)
 		self.psyTrellisStrengthSpinBox.setToolTip(
-"--psy-rd <float>:<float>\n\
-The second value is psy-trellis. The higher the value,\n\
-the more detail and sharpness can be retained but also\n\
-increases the risk of unwanted artifacts.\n\
-psy-trellis strength (requires --trellis>=1)\n\n\
-Default: 0.0\n\
-Recommended: ~0.6 (animation)")
+			"--psy-rd <float>:<float>\n\
+			The second value is psy-trellis. The higher the value,\n\
+			the more detail and sharpness can be retained but also\n\
+			increases the risk of unwanted artifacts.\n\
+			psy-trellis strength (requires --trellis>=1)\n\n\
+			Default: 0.0\n\
+			Recommended: ~0.6 (animation)")
 		self.psyTrellisStrengthSpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
 		self.fastPSkipCheckBox = QCheckBox('Fast P-Skip')
 		self.fastPSkipCheckBox.setToolTip(
-"--no-fast-pskip (to disable)\n\
-Enables/disables early skip detection on P-frames. Disabling pskip detection\n\
-increases encoding speed but may cause artifacts in areas of solid\n\
-color or gradients such as dark scenes or sky.\n\n\
-Default: enabled\n\
-Recommended: enabled")
+			"--no-fast-pskip (to disable)\n\
+			Enables/disables early skip detection on P-frames. Disabling pskip detection\n\
+			increases encoding speed but may cause artifacts in areas of solid\n\
+			color or gradients such as dark scenes or sky.\n\n\
+			Default: enabled\n\
+			Recommended: enabled")
 		self.fastPSkipCheckBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -979,9 +979,9 @@ Recommended: enabled")
 		self.resizeCheckBox.stateChanged.connect(
 			self.resizeStateChanged)
 		self.resizeCheckBox.setToolTip(
-"--video-filter, --vf resize:[width=<integer>,height=<integer>][,method=<string>]\n\
-Enables/disables video resizing using the specified method and resolution.\n\n\
-Default: disabled")
+			"--video-filter, --vf resize:[width=<integer>,height=<integer>][,method=<string>]\n\
+			Enables/disables video resizing using the specified method and resolution.\n\n\
+			Default: disabled")
 		self.resizeCheckBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -999,13 +999,13 @@ Default: disabled")
 		self.resizeMethodComboBox.addItem('lanczos')
 		self.resizeMethodComboBox.addItem('spline')
 		self.resizeMethodComboBox.setToolTip(
-"method=<string>\n\
-Sets the method to use for resizing.\n\n\
-Values: fastbilinear, bilinear, bicubic, experimental, point,\n\
-	area, bicublin, gauss, sinc, lanczos, spline\n\
-Default: disabled\n\
-Recommended: bicubic or gauss, bilinear (downscaling) or\n\
-	cubic, spline, lanczos (upscaling)")
+			"method=<string>\n\
+			Sets the method to use for resizing.\n\n\
+			Values: fastbilinear, bilinear, bicubic, experimental, point,\n\
+				area, bicublin, gauss, sinc, lanczos, spline\n\
+			Default: disabled\n\
+			Recommended: bicubic or gauss, bilinear (downscaling) or\n\
+				cubic, spline, lanczos (upscaling)")
 		self.resizeMethodComboBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -1021,7 +1021,6 @@ Recommended: bicubic or gauss, bilinear (downscaling) or\n\
 		self.resizeHeightSpinBox.setMinimum(200)
 		self.resizeHeightSpinBox.setMaximum(2160)
 		self.resizeHeightSpinBox.setSingleStep(2)
-
 
 	def subPixelRefinementValueChanged(self):
 		if self.subPixelRefinementComboBox.currentIndex() == 10:
@@ -1070,7 +1069,6 @@ Recommended: bicubic or gauss, bilinear (downscaling) or\n\
 			self.resizeHeightLabel.setEnabled(False)
 			self.resizeHeightSpinBox.setEnabled(False)
 
-
 	def setMiscTab(self):
 		print('Setting the Misc Tab')
 
@@ -1078,9 +1076,9 @@ Recommended: bicubic or gauss, bilinear (downscaling) or\n\
 		self.audioSourceCheckBox.stateChanged.connect(
 			self.audioStateChanged)
 		self.audioSourceCheckBox.setToolTip(
-"Uses source audio tracks or encode audio into AAC format.\n\n\
-Default: enabled (uses source tracks)\n\
-Recommended: enabled (source tracks are already AAC), disabled (FLAC)")
+			"Uses source audio tracks or encode audio into AAC format.\n\n\
+			Default: enabled (uses source tracks)\n\
+			Recommended: enabled (source tracks are already AAC), disabled (FLAC)")
 		self.audioSourceCheckBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -1090,10 +1088,10 @@ Recommended: enabled (source tracks are already AAC), disabled (FLAC)")
 		self.audioQualitySpinBox.setMaximum(1.00)
 		self.audioQualitySpinBox.setSingleStep(0.05)
 		self.audioQualitySpinBox.setToolTip(
-"Sets the target quality of the output audio.\n\
-A higher value increases quality and file size.\n\n\
-Default: 0.50\n\
-Recommended: 0.50")
+			"Sets the target quality of the output audio.\n\
+			A higher value increases quality and file size.\n\n\
+			Default: 0.50\n\
+			Recommended: 0.50")
 		self.audioQualitySpinBox.setStyleSheet(
 			'QToolTip {padding: -1px; opacity: 255}')
 
@@ -1133,6 +1131,7 @@ Recommended: 0.50")
 	"""
 	Setting the layout of widgets
 	"""
+
 	def layoutMainGrid(self):
 		grid = QGridLayout()
 		grid.setSpacing(10)
@@ -1147,8 +1146,8 @@ Recommended: 0.50")
 		grid.addWidget(self.saveProfileButton, 49, 44, 1, 3)
 		grid.addWidget(self.restoreProfileButton, 49, 47, 1, 3)
 
-		self.settingsWindow = QDialog(self.mainWindow, 
-			Qt.WindowCloseButtonHint)
+		self.settingsWindow = QDialog(self.mainWindow,
+									  Qt.WindowCloseButtonHint)
 		self.settingsWindow.setWindowIcon(QIcon(os.path.normpath(
 			'./Icons/transparent.png')))
 		self.settingsWindow.setWindowTitle('Encoding Settings')
@@ -1159,7 +1158,7 @@ Recommended: 0.50")
 
 	def layoutCommonGrid(self):
 		emptyCell = QLabel('')
-		emptyCell1= QLabel('')
+		emptyCell1 = QLabel('')
 
 		encodingModeGroup = QGroupBox('Encoding Mode')
 		grid1 = QGridLayout()
@@ -1201,7 +1200,7 @@ Recommended: 0.50")
 		commonGrid.addWidget(levelGroup, 3, 8, 1, 2)
 		commonGrid.addWidget(self.bitDepthCheckBox, 4, 0, 2, 1)
 		commonGrid.addWidget(self.quickSettingsCheckBox, 5, 0, 2, 1)
-		
+
 		self.tab1.setLayout(commonGrid)
 
 	def layoutFrameTypeGrid(self):
@@ -1264,7 +1263,7 @@ Recommended: 0.50")
 
 		qpGroup = QGroupBox('Quantizers')
 		grid1 = QGridLayout()
-		
+
 		grid1.addWidget(self.qpMinLabel, 0, 10, 1, 10)
 		grid1.addWidget(self.qpMaxLabel, 0, 20, 1, 10)
 
@@ -1385,8 +1384,8 @@ Recommended: 0.50")
 		self.resizeWidthLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
 		self.resizeHeightLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
 		self.resizeWidthSpinBox.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-		self.resizeHeightSpinBox.setAlignment(Qt.AlignHCenter | 
-			Qt.AlignVCenter)
+		self.resizeHeightSpinBox.setAlignment(Qt.AlignHCenter |
+											  Qt.AlignVCenter)
 
 		resizeGroup.setLayout(grid3)
 
@@ -1399,7 +1398,6 @@ Recommended: 0.50")
 
 		self.tab4.setLayout(advancedGrid)
 
-
 	def layoutMiscGrid(self):
 		emptyCell = QLabel('')
 		emptyCell1 = QLabel('')
@@ -1411,7 +1409,6 @@ Recommended: 0.50")
 		grid1.addWidget(self.audioQualityLabel, 0, 35, 1, 5)
 		grid1.addWidget(self.audioQualitySpinBox, 0, 40, 1, 10)
 		audioGroup.setLayout(grid1)
-
 
 		customCmdGroup = QGroupBox('Custom Command Line')
 		grid2 = QGridLayout()
@@ -1437,18 +1434,17 @@ Recommended: 0.50")
 
 		self.tab5.setLayout(miscGrid)
 
-
-
 	"""
 	Profile Load Settings methods
 	"""
+
 	def loadProfileSettings(self):
 		if self.profileComboBox.currentText() == '':
 			return None
 
 		config = configparser.ConfigParser()
-		config.read(os.path.normpath('./profiles/' + 
-			self.profileComboBox.currentText() + '.ini'))
+		config.read(os.path.normpath('./profiles/' +
+									 self.profileComboBox.currentText() + '.ini'))
 
 		print("reading from " + self.profileComboBox.currentText() + '.ini')
 
@@ -1647,7 +1643,8 @@ Recommended: 0.50")
 		self.customCmdLineTextEdit.setPlainText(
 			config.get('Misc', 'customCmdLine'))
 
-		self.cmdLineDisplayTextBrowser.setText(config.get('Misc', 'commandLineOutput') + config.get('Misc', 'customCmdLine'))
+		self.cmdLineDisplayTextBrowser.setText(
+			config.get('Misc', 'commandLineOutput') + config.get('Misc', 'customCmdLine'))
 
 		if self.audioSourceCheckBox.isChecked():
 			self.audioQualityLabel.setEnabled(False)
@@ -1656,6 +1653,7 @@ Recommended: 0.50")
 	"""
 	Profile handling methods
 	"""
+
 	def renameProfile(self):
 		originalText = self.profileComboBox.currentText()
 		originalFileName = originalText + '.ini'
@@ -1663,15 +1661,15 @@ Recommended: 0.50")
 		renameDialog = QInputDialog()
 
 		text, ok = renameDialog.getText(self.settingsWindow, 'Rename Profile',
-			'Enter new profile name:', text=originalText, 
-			flags=Qt.WindowCloseButtonHint)
-		
+										'Enter new profile name:', text=originalText,
+										flags=Qt.WindowCloseButtonHint)
+
 		if ok and text != originalText:
 			if self.checkExistingProfile(text) is False:
 				for fname in os.listdir('./profiles'):
 					if fname == originalFileName:
-						os.rename(os.path.normpath('./profiles/' + fname), 
-							(os.path.normpath('./profiles/' + text + '.ini')))
+						os.rename(os.path.normpath('./profiles/' + fname),
+								  (os.path.normpath('./profiles/' + text + '.ini')))
 
 						self.refreshProfileList(text)
 
@@ -1679,7 +1677,7 @@ Recommended: 0.50")
 		addProfileDialog = QInputDialog()
 
 		text, ok = addProfileDialog.getText(self.settingsWindow, 'Add Profile',
-			'Please name new profile:', flags=Qt.WindowCloseButtonHint)
+											'Please name new profile:', flags=Qt.WindowCloseButtonHint)
 
 		if ok and text != None and self.checkExistingProfile(text) is False:
 			self.defaultConfig(text)
@@ -1687,7 +1685,7 @@ Recommended: 0.50")
 
 			self.refreshProfileList(text)
 
-	def refreshProfileList(self, selected = None):
+	def refreshProfileList(self, selected=None):
 		print('refreshing profile list')
 
 		self.findProfiles()
@@ -1698,16 +1696,16 @@ Recommended: 0.50")
 		deleteProfileDialog = QMessageBox(self.settingsWindow)
 		deleteProfileDialog.setWindowTitle('Delete Profile')
 
-		deleteProfileDialog.setText("Are you sure you want to delete '" + 
-			self.profileComboBox.currentText() + "'")
+		deleteProfileDialog.setText("Are you sure you want to delete '" +
+									self.profileComboBox.currentText() + "'")
 
 		deleteProfileDialog.setStandardButtons(
 			QMessageBox.Yes | QMessageBox.No)
 		deleteProfileDialog.setDefaultButton(QMessageBox.No)
 
 		if (deleteProfileDialog.exec_() == QMessageBox.Yes):
-			os.remove(os.path.normpath('./profiles/' + 
-				self.profileComboBox.currentText()) + '.ini')
+			os.remove(os.path.normpath('./profiles/' +
+									   self.profileComboBox.currentText()) + '.ini')
 
 			self.profileComboBox.removeItem(
 				self.profileComboBox.findText(
@@ -1823,7 +1821,6 @@ Recommended: 0.50")
 		config['Misc']['CommandLineOutput'] = (
 			self.cmdLineOutputTextBrowser.toPlainText())
 
-
 		with open('./profiles/' + profileName + '.ini', 'w') as configfile:
 			config.write(configfile)
 
@@ -1853,10 +1850,10 @@ Recommended: 0.50")
 
 		return False
 
-
 	"""
 	Creates x264 cmd paramters by reading config file
 	"""
+
 	def updateCmdLineOutput(self, config):
 		cmdOutput = ''
 
@@ -1870,8 +1867,8 @@ Recommended: 0.50")
 		else:
 			cmdOutput += '_tMod-8bit-all.exe '
 
-		cmdOutput += ('--threads ' + str(config.getint('System', 'Threads')) 
-			+ ' ')
+		cmdOutput += ('--threads ' + str(config.getint('System', 'Threads'))
+					  + ' ')
 
 		cmdOutput += self.updateCommonCmdLine()
 
@@ -1881,8 +1878,8 @@ Recommended: 0.50")
 			cmdOutput += self.updateAdvancedCmdLine()
 
 		self.cmdLineOutputTextBrowser.setText(cmdOutput)
-		self.cmdLineDisplayTextBrowser.setText(cmdOutput + 
-			config.get('Misc', 'customCmdLine'))
+		self.cmdLineDisplayTextBrowser.setText(cmdOutput +
+											   config.get('Misc', 'customCmdLine'))
 
 	def updateCommonCmdLine(self):
 		cmdOutput = ''
@@ -2050,8 +2047,8 @@ Recommended: 0.50")
 			if selection == selection1 and selection1 == selection2:
 				cmdOutput += '--qpmin ' + str(selection) + ' '
 			else:
-				cmdOutput += ('--qpmin ' + str(selection) + ':' + 
-					str(selection1) + ':' + str(selection2) + ' ')
+				cmdOutput += ('--qpmin ' + str(selection) + ':' +
+							  str(selection1) + ':' + str(selection2) + ' ')
 
 		selection = self.qpIMaxSpinBox.value()
 		selection1 = self.qpPMaxSpinBox.value()
@@ -2060,8 +2057,8 @@ Recommended: 0.50")
 			if selection == selection1 and selection1 == selection2:
 				cmdOutput += '--qpmax ' + str(selection) + ' '
 			else:
-				cmdOutput += ('--qpmax ' + str(selection) + ':' + 
-					str(selection1) + ':' + str(selection2) + ' ')
+				cmdOutput += ('--qpmax ' + str(selection) + ':' +
+							  str(selection1) + ':' + str(selection2) + ' ')
 
 		selection = self.qpStepSpinBox.value()
 		if selection != 4:
@@ -2145,32 +2142,32 @@ Recommended: 0.50")
 		selection2 = round(self.psyTrellisStrengthSpinBox.value(), 1)
 		if selection >= 6:
 			if selection1 != 1.0 or selection2 != 0.0:
-				cmdOutput += ('--psy-rd ' + str(selection1) + ':' + 
-					str(selection2) + ' ')
+				cmdOutput += ('--psy-rd ' + str(selection1) + ':' +
+							  str(selection2) + ' ')
 			elif self.tuningComboBox.currentIndex() != 0:
-				cmdOutput += ('--psy-rd ' + str(selection1) + ':' + 
-					str(selection2) + ' ')
+				cmdOutput += ('--psy-rd ' + str(selection1) + ':' +
+							  str(selection2) + ' ')
 
 		if not self.fastPSkipCheckBox.isChecked():
 			cmdOutput += '--no-fast-pskip '
 
 		if self.resizeCheckBox.isChecked():
-			cmdOutput += ('--video-filter resize:width=' + 
-				str(self.resizeWidthSpinBox.value()) + ',height=' +
-				str(self.resizeHeightSpinBox.value()))
+			cmdOutput += ('--video-filter resize:width=' +
+						  str(self.resizeWidthSpinBox.value()) + ',height=' +
+						  str(self.resizeHeightSpinBox.value()))
 
 			if self.resizeMethodComboBox.currentIndex() != 2:
-				cmdOutput += (',method=' + 
-					self.resizeMethodComboBox.currentText())
+				cmdOutput += (',method=' +
+							  self.resizeMethodComboBox.currentText())
 
 			cmdOutput += ' '
 
 		return cmdOutput
 
-
 	"""
 	Profile default creation method
 	"""
+
 	def defaultConfig(self, profileName):
 		config = configparser.ConfigParser()
 		config.read(os.path.normpath('./profiles/' + profileName + '.ini'))
@@ -2246,7 +2243,7 @@ Recommended: 0.50")
 			config['Misc']['CommandLineOutput'] = 'x264_32'
 
 		config['Misc']['CommandLineOutput'] += ('_tMod-8bit-all.exe ' +
-				'--threads ' + str(config.getint('System', 'Threads')))
+												'--threads ' + str(config.getint('System', 'Threads')))
 
 		with open('./profiles/' + profileName + '.ini', 'w') as configfile:
 			config.write(configfile)
